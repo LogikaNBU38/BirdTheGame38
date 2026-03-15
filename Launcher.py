@@ -6,6 +6,7 @@ WIDTH, HEIGHT = 500, 500
 
 mixer.init()
 clicksound = pygame.mixer.Sound("Assets/Sounds/click.mp3")
+clicksound.set_volume(0.3)
 def launcher():
     init()
     screen = display.set_mode((WIDTH, HEIGHT))

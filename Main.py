@@ -36,7 +36,7 @@ clock = time.Clock()
 player_rect = Rect(150, window_size[1]//2-100, 100, 100)
 
 
-def generate_pipes(count, pipe_width=140, gap=280, min_height=50, max_height=440, distance=650):
+def generate_pipes(count, pipe_width=70, gap=280, min_height=50, max_height=440, distance=650):
    pipes = []
    start_x = window_size[0]
    for i in range(count):
@@ -64,6 +64,11 @@ soul = image.load("Assets/Images/TheSoul.png").convert()
 soul = transform.scale(soul, (100, 100))
 background = image.load("Assets/Images/background.png").convert()
 background = transform.scale(background, (1200, 800))
+pipe_imageB = image.load("Assets/Images/mike.png")
+pipe_imageB = transform.scale(pipe_imageB, (70, 400))
+pipe_imageT = image.load("Assets/Images/mike.png")
+pipe_imageT = transform.scale(pipe_imageT, (70, 400))
+pipe_imageT = transform.flip(pipe_imageT, False, True)
 
 color = "yellow"
 chance = randint(1, 2)
@@ -76,6 +81,7 @@ mixer.music.load("Assets/Sounds/theme.mp3")
 mixer.music.set_volume(0.15)
 mixer.music.play(-1)
 coinsound = mixer.Sound("Assets/Sounds/plusscore.mp3")
+coinsound.set_volume(0.15)
 if musicvalue == False:
     mixer.music.set_volume(0)
     coinsound.set_volume(0)
@@ -114,7 +120,15 @@ with sd.InputStream(samplerate=sr, channels=1, blocksize=block, callback=audio_c
                coinsound.play()
            if player_rect.colliderect(pie):
                lose = True
+       for i in range(len(pies)):
+           pipe = pies[i]
 
+           if i % 2 == 0:
+               scaled_top = transform.scale(pipe_imageT, (pipe.width, pipe.height))
+               window.blit(scaled_top, (pipe.x, pipe.y))
+           else:
+               scaled_bottom = transform.scale(pipe_imageB, (pipe.width, pipe.height))
+               window.blit(scaled_bottom, (pipe.x, pipe.y))
 
        if len(pies) < 8:
            pies += generate_pipes(150)
