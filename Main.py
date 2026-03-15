@@ -4,6 +4,14 @@ from pygame import *
 from random import randint
 
 
+from Launcher import launcher
+
+mixer.music.load("Assets/Sounds/intro.mp3")
+mixer.music.set_volume(0.15)
+mixer.music.play(-1)
+
+musicvalue = launcher()
+
 # ====== АУДІО ======
 sr = 16000
 block = 256           # менше -> швидше реагує
@@ -52,8 +60,10 @@ gravity = 0.6
 THRESH = 0.001      # поріг спрацьовування “стрибка” (підлаштуй під мікрофон)
 IMPULSE = -8.0     # сила стрибка вгору
 
-soul = image.load("TheSoul.png").convert()
+soul = image.load("Assets/Images/TheSoul.png").convert()
 soul = transform.scale(soul, (100, 100))
+background = image.load("Assets/Images/background.png").convert()
+background = transform.scale(background, (1200, 800))
 
 color = "yellow"
 chance = randint(1, 2)
@@ -61,6 +71,15 @@ if chance == 1:
     color = "pink"
 else:
     color = "yellow"
+
+mixer.music.load("Assets/Sounds/theme.mp3")
+mixer.music.set_volume(0.15)
+mixer.music.play(-1)
+coinsound = mixer.Sound("Assets/Sounds/plusscore.mp3")
+if musicvalue == False:
+    mixer.music.set_volume(0)
+    coinsound.set_volume(0)
+
 
 # Тримаємо відкритим аудіо-потік, а всередині крутиться гра
 with sd.InputStream(samplerate=sr, channels=1, blocksize=block, callback=audio_cb):
@@ -72,13 +91,16 @@ with sd.InputStream(samplerate=sr, channels=1, blocksize=block, callback=audio_c
 
        # ЛОГІКА РУХУ
        # якщо голос гучніший за поріг — робимо "флап"
+       window.fill('black')
+       window.blit(background, (0, 0))
+
        if mic_level > THRESH:
            y_vel = IMPULSE
        y_vel += gravity
        player_rect.y += int(y_vel)
 
 
-       window.fill('black')
+
        draw.rect(window, 'red', player_rect)
        window.blit(soul, player_rect)
 
@@ -89,6 +111,7 @@ with sd.InputStream(samplerate=sr, channels=1, blocksize=block, callback=audio_c
            if pie.x <= -100:
                pies.remove(pie)
                score += 0.5
+               coinsound.play()
            if player_rect.colliderect(pie):
                lose = True
 
