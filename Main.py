@@ -98,7 +98,7 @@ with sd.InputStream(samplerate=sr, channels=1, blocksize=block, callback=audio_c
        # ЛОГІКА РУХУ
        # якщо голос гучніший за поріг — робимо "флап"
        window.fill('black')
-       window.blit(background, (0, 0))
+       window.blit(background, (0, randint(-2,0)))
 
        if mic_level > THRESH:
            y_vel = IMPULSE
