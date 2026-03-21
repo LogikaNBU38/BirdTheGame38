@@ -86,9 +86,10 @@ if musicvalue == False:
     mixer.music.set_volume(0)
     coinsound.set_volume(0)
 
-
 # Тримаємо відкритим аудіо-потік, а всередині крутиться гра
 with sd.InputStream(samplerate=sr, channels=1, blocksize=block, callback=audio_cb):
+   upvalue = 0
+   anim = False
    while True:
        for e in event.get():
            if e.type == QUIT:
@@ -98,7 +99,16 @@ with sd.InputStream(samplerate=sr, channels=1, blocksize=block, callback=audio_c
        # ЛОГІКА РУХУ
        # якщо голос гучніший за поріг — робимо "флап"
        window.fill('black')
-       window.blit(background, (0, randint(-2,0)))
+       if anim == False:
+           upvalue = upvalue - 1
+           if upvalue <= -15:
+               anim = True
+       elif anim == True:
+           upvalue = upvalue + 1
+           if upvalue >= 15:
+               anim = False
+
+       window.blit(background, (0, upvalue))
 
        if mic_level > THRESH:
            y_vel = IMPULSE
